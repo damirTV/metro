@@ -11,4 +11,14 @@ public class Station {
     private Line line;
     private List<Station> stationTransferList;
     private Metro metro;
+
+    public Station(String name, Metro metro, Line line) {
+        this.name = name;
+        this.metro = metro;
+        this.line = line;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
