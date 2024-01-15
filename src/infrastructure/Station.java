@@ -9,7 +9,7 @@ public class Station {
     private Station nextStation;
     private Duration timeToNextStation;
     private Line line;
-    private List<Station> stationTransferList;
+    private Station stationChangeList; // TODO - переделать в List
     private Metro metro;
 
     public Station(String name, Metro metro, Line line) {
@@ -20,5 +20,25 @@ public class Station {
 
     public String getName() {
         return name;
+    }
+
+    public void setStationChangeList(Station stations) {
+        stationChangeList = stations;
+    }
+
+    public void setPrevStation(Station prevStation) {
+        this.prevStation = prevStation;
+    }
+
+    public Station getNextStation() {
+        return nextStation;
+    }
+
+    public void setNextStation(Station nextStation) {
+        this.nextStation = nextStation;
+    }
+
+    public void setTimeToNextStation(Duration timeToNextStation) {
+        this.timeToNextStation = timeToNextStation;
     }
 }

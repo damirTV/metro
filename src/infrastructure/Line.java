@@ -6,7 +6,7 @@ import java.util.List;
 public class Line {
     private Color color;
     private List<Station> stationList = new ArrayList<>();
-    private Metro metro;
+    private final Metro metro;
 
     public Line(Color color, Metro metro) {
         this.color = color;
@@ -15,10 +15,6 @@ public class Line {
 
     public Color getColor() {
         return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public void addStation(String name, Metro metro, Line line) {
