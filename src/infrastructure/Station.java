@@ -1,6 +1,7 @@
 package infrastructure;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Station {
@@ -9,7 +10,7 @@ public class Station {
     private Station nextStation;
     private Duration timeToNextStation;
     private Line line;
-    private Station stationChangeList; // TODO - переделать в List
+    private List<Station> stationChangeList = new ArrayList<>();
     private Metro metro;
 
     public Station(String name, Metro metro, Line line) {
@@ -23,7 +24,7 @@ public class Station {
     }
 
     public void setStationChangeList(Station stations) {
-        stationChangeList = stations;
+        stationChangeList.add(stations);
     }
 
     public void setPrevStation(Station prevStation) {
