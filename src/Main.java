@@ -1,7 +1,5 @@
 import infrastructure.Color;
 import infrastructure.Metro;
-
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
