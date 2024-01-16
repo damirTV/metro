@@ -2,9 +2,10 @@ package infrastructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class Line {
-    private Color color;
+    private final Color color;
     private List<Station> stationList = new ArrayList<>();
     private final Metro metro;
 
@@ -23,5 +24,12 @@ public class Line {
 
     public List<Station> getStationList() {
         return stationList;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(",", Line.class.getSimpleName() + "[", "]")
+                .add("color='" + color + "'")
+                .add("stations='" + stationList + "'").toString();
     }
 }

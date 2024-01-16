@@ -3,6 +3,7 @@ package infrastructure;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class Station {
     private String name;
@@ -10,13 +11,14 @@ public class Station {
     private Station nextStation;
     private Duration timeToNextStation;
     private Line line;
-    private List<Station> stationChangeList = new ArrayList<>();
+    private List<Station> stationChangeList;
     private Metro metro;
 
     public Station(String name, Metro metro, Line line) {
         this.name = name;
         this.metro = metro;
         this.line = line;
+        stationChangeList = new ArrayList<>();
     }
 
     public String getName() {
@@ -35,11 +37,30 @@ public class Station {
         return nextStation;
     }
 
+    public Line getLine() {
+        return line;
+    }
+
     public void setNextStation(Station nextStation) {
         this.nextStation = nextStation;
     }
 
     public void setTimeToNextStation(Duration timeToNextStation) {
         this.timeToNextStation = timeToNextStation;
+    }
+
+    @Override
+    public String toString() {
+        List<String> changeList = new ArrayList<>();
+        if (stationChangeList.isEmpty()) {
+            changeList.add("null");
+        } else {
+            for (Station station : stationChangeList) {
+                changeList.add(station.getLine().getColor().getName());
+            }
+        }
+        return new StringJoiner(",", Station.class.getSimpleName() + "{", "}")
+                .add("name='" + name + "'")
+                .add("changeLines=" + changeList).toString();
     }
 }

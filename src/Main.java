@@ -26,5 +26,6 @@ public class Main {
                 changeStations);
         metro.createLastStationLine(Color.BLUE, "Нижнекамская", metro, Duration.ofSeconds(199));
         metro.createLastStationLine(Color.BLUE, "Соборная", metro, Duration.ofSeconds(108));
+        System.out.println(metro);
     }
 }
