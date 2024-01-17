@@ -39,6 +39,46 @@ public class Metro {
         return lineList;
     }
 
+    public int getNumberStagesBetweenStations(Station firststation, Station lastStation) {
+        if (getNumberStagesBetweenNextStations(firststation, lastStation) != -1) {
+            return getNumberStagesBetweenNextStations(firststation, lastStation);
+        }
+        if (getNumberStagesBetweenPrevStations(firststation, lastStation) != -1) {
+            return getNumberStagesBetweenPrevStations(firststation, lastStation);
+        }
+        throw new RuntimeException(Errors.E11.getText() + " " + firststation + " в " + lastStation);
+    }
+
+    private int getNumberStagesBetweenNextStations(Station firstStation, Station lastStation) {
+        if (firstStation.getLine() != lastStation.getLine()) {
+            throw new RuntimeException(Errors.E06.getText());
+        }
+        int countStage = 1;
+        while (firstStation.getNextStation() != lastStation) {
+            if (firstStation.getNextStation() == null) {
+                return -1;
+            }
+            firstStation = firstStation.getNextStation();
+            countStage++;
+        }
+        return countStage;
+    }
+
+    private int getNumberStagesBetweenPrevStations(Station firstStation, Station lastStation) {
+        if (firstStation.getLine() != lastStation.getLine()) {
+            throw new RuntimeException(Errors.E06.getText());
+        }
+        int countStage = 1;
+        while (firstStation.getPrevStation() != lastStation) {
+            if (firstStation.getPrevStation() == null) {
+                return -1;
+            }
+            firstStation = firstStation.getPrevStation();
+            countStage++;
+        }
+        return countStage;
+    }
+
     private void setStationChangeList(Station lastStation, List<String> changeStations) {
         for (String station : changeStations) {
             Station changeStation = getStationByName(station);
@@ -58,7 +98,7 @@ public class Metro {
                 }
             }
         }
-        throw new RuntimeException(Errors.E01.getText());
+        throw new RuntimeException(Errors.E10.getText());
     }
 
     public void createNewLine(Color color, Metro metro) {
@@ -151,7 +191,7 @@ public class Metro {
                 return;
             }
         }
-        throw new RuntimeException(Errors.E06.getText());
+        throw new RuntimeException(Errors.E05.getText());
     }
 
     private void checkNameStation(String name) {

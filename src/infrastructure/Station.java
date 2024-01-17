@@ -33,6 +33,10 @@ public class Station {
         return nextStation;
     }
 
+    public Station getPrevStation() {
+        return prevStation;
+    }
+
     public Line getLine() {
         return line;
     }
