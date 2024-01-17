@@ -18,12 +18,12 @@ public class Line {
         return color;
     }
 
-    public void addStation(String name, Metro metro, Line line) {
-        stationList.add(new Station(name, metro, line));
-    }
-
     public List<Station> getStationList() {
         return stationList;
+    }
+
+    public void addStation(String name, Metro metro, Line line) {
+        stationList.add(new Station(name, metro, line));
     }
 
     @Override

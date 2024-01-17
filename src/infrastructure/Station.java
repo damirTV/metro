@@ -25,12 +25,8 @@ public class Station {
         return name;
     }
 
-    public void setStationChangeList(Station stations) {
-        stationChangeList.add(stations);
-    }
-
-    public void setPrevStation(Station prevStation) {
-        this.prevStation = prevStation;
+    public List<Station> getStationChangeList() {
+        return stationChangeList;
     }
 
     public Station getNextStation() {
@@ -39,6 +35,14 @@ public class Station {
 
     public Line getLine() {
         return line;
+    }
+
+    public void setStationChangeList(Station stations) {
+        stationChangeList.add(stations);
+    }
+
+    public void setPrevStation(Station prevStation) {
+        this.prevStation = prevStation;
     }
 
     public void setNextStation(Station nextStation) {
