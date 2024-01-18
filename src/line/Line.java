@@ -1,4 +1,7 @@
-package infrastructure;
+package line;
+
+import metro.Metro;
+import station.Station;
 
 import java.util.ArrayList;
 import java.util.List;

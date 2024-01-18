@@ -1,5 +1,5 @@
-import infrastructure.Color;
-import infrastructure.Metro;
+import line.Color;
+import metro.Metro;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,5 +27,8 @@ public class Main {
         metro.createLastStationLine(Color.BLUE, "Нижнекамская", metro, Duration.ofSeconds(199));
         metro.createLastStationLine(Color.BLUE, "Соборная", metro, Duration.ofSeconds(108));
         System.out.println(metro);
+        System.out.println(metro.getNumberStagesBetweenStationsDifferentLines(metro.getStationByName("Пермь 1"),
+                metro.getStationByName("Пермь 1")));
+
     }
 }

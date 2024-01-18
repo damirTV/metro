@@ -1,4 +1,4 @@
-package infrastructure;
+package line;
 
 public enum Color {
     RED("Красная"),

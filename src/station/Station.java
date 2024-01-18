@@ -1,4 +1,7 @@
-package infrastructure;
+package station;
+
+import line.Line;
+import metro.Metro;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -13,12 +16,14 @@ public class Station {
     private Line line;
     private List<Station> stationChangeList;
     private Metro metro;
+    private TicketOffice ticketOffice;
 
     public Station(String name, Metro metro, Line line) {
         this.name = name;
         this.metro = metro;
         this.line = line;
         stationChangeList = new ArrayList<>();
+        this.ticketOffice = new TicketOffice();
     }
 
     public String getName() {

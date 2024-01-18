@@ -1,4 +1,4 @@
-package infrastructure;
+package metro;
 
 public enum Errors {
     E01("Ошибка 01: станции с таким именем не найдено"),

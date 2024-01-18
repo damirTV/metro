@@ -1,10 +1,14 @@
-package infrastructure;
+package metro;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.time.Duration;
 import java.util.StringJoiner;
+import line.Color;
+import line.Line;
+import station.Station;
+
 
 public class Metro {
     private final String city;
@@ -15,7 +19,7 @@ public class Metro {
         this.lineList = new ArrayList<>();
     }
 
-    private Station getStationByName(String name) {
+    public Station getStationByName(String name) { // TODO - переделать в private
         for (int i = 0; i < lineList.size(); i++) {
             for (int j = 0; j < lineList.get(i).getStationList().size(); j++) {
                 if (Objects.equals(name, lineList.get(i).getStationList().get(j).getName())) {
@@ -39,14 +43,38 @@ public class Metro {
         return lineList;
     }
 
-    public int getNumberStagesBetweenStations(Station firststation, Station lastStation) {
-        if (getNumberStagesBetweenNextStations(firststation, lastStation) != -1) {
-            return getNumberStagesBetweenNextStations(firststation, lastStation);
+    public int getNumberStagesBetweenStationsDifferentLines(Station firstStation, Station lastStation) {
+
+        if (firstStation.getLine() == lastStation.getLine()) {
+            return getNumberStagesBetweenStationsSameLines(firstStation, lastStation);
         }
-        if (getNumberStagesBetweenPrevStations(firststation, lastStation) != -1) {
-            return getNumberStagesBetweenPrevStations(firststation, lastStation);
+        Line firstLine = firstStation.getLine();
+        Line lastLine = lastStation.getLine();
+        int changesFirstLine;
+        if (findChangeStation(firstLine, lastLine) == firstStation) {
+            changesFirstLine = 0;
+        } else {
+            Station changeStationFirstLine = findChangeStation(firstStation.getLine(), lastStation.getLine());
+            changesFirstLine = getNumberStagesBetweenStationsSameLines(firstStation, changeStationFirstLine);
         }
-        throw new RuntimeException(Errors.E11.getText() + " " + firststation + " в " + lastStation);
+        int changeLastLine;
+        if (findChangeStation(lastLine, firstLine) == lastStation) {
+            changeLastLine = 0;
+        } else {
+            Station changeStationLastLine = findChangeStation(lastStation.getLine(), firstStation.getLine());
+            changeLastLine = getNumberStagesBetweenStationsSameLines(lastStation, changeStationLastLine);
+        }
+        return changesFirstLine + changeLastLine;
+    }
+
+    public int getNumberStagesBetweenStationsSameLines(Station firstStation, Station lastStation) {
+        if (getNumberStagesBetweenNextStations(firstStation, lastStation) != -1) {
+            return getNumberStagesBetweenNextStations(firstStation, lastStation);
+        }
+        if (getNumberStagesBetweenPrevStations(firstStation, lastStation) != -1) {
+            return getNumberStagesBetweenPrevStations(firstStation, lastStation);
+        }
+        throw new RuntimeException(Errors.E11.getText() + " " + firstStation + " в " + lastStation);
     }
 
     private int getNumberStagesBetweenNextStations(Station firstStation, Station lastStation) {
