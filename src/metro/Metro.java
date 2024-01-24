@@ -126,7 +126,7 @@ public class Metro {
     }
 
     public void saleTicket(LocalDate date, Station firstStation, Station lastStation) {
-        firstStation.saleTicket(date, firstStation.getName(), lastStation.getName(),
+        firstStation.saleTicket(date,
                 getNumberStagesBetweenStationsDifferentLines(firstStation, lastStation));
     }
 

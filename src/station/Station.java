@@ -78,8 +78,8 @@ public class Station {
         return changeList;
     }
 
-    public void saleTicket(LocalDate date, String firstStation, String lastStation, int stages) {
-        ticketOffice.saleTicket(date, firstStation, lastStation, stages);
+    public void saleTicket(LocalDate date, int stages) {
+        ticketOffice.saleTicket(date, stages);
     }
 
     @Override
