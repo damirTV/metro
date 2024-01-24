@@ -1,6 +1,7 @@
 package metro;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.*;
 import line.Color;
 import line.Line;
@@ -98,8 +99,8 @@ public class Metro {
         return countStage;
     }
 
-    public void getListTickets(Station saleStation) {
-        System.out.println(saleStation.listTickets());
+    public void getRevenueByStation(Station saleStation) {
+        System.out.println(saleStation.getRevenue());
    }
 
    private void setStationChangeList(Station lastStation, List<String> changeStations) {
@@ -130,8 +131,9 @@ public class Metro {
         throw new RuntimeException(Errors.NOT_FOUND_CHANGE_STATION.getText());
     }
 
-    public void saleTicket(Date date, Station saleStation, Station firstStation, Station lastStation) {
-        saleStation.saleTicket(date, firstStation.getName(), lastStation.getName());
+    public void saleTicket(LocalDate date, Station firstStation, Station lastStation) {
+        firstStation.saleTicket(date, firstStation.getName(), lastStation.getName(),
+                getNumberStagesBetweenStationsDifferentLines(firstStation, lastStation));
     }
 
     public void createNewLine(Color color, Metro metro) {

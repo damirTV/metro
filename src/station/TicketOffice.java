@@ -1,18 +1,22 @@
 package station;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
-
+import java.util.HashMap;
+import java.util.Map;
 
 public class TicketOffice {
-    private List<Ticket> ticketList = new ArrayList<>();
+    private Map<LocalDate, Long> revenue = new HashMap<>();
 
-    public void saleTicket(Date date, String firstStation, String lastStation) {
-        ticketList.add(new Ticket(10, date, firstStation, lastStation));
+    public void saleTicket(LocalDate date, String firstStation, String lastStation, int stages) {
+        Long ticketPrice = (long) (stages * 5L + 20);
+        if (revenue.containsKey(date)) {
+            ticketPrice = revenue.get(date) + ticketPrice;
+        }
+        revenue.put(date, ticketPrice);
     }
 
-    public List<Ticket> listTickets() {
-        return ticketList;
+    public Map<LocalDate, Long> getRevenue() {
+        return revenue;
     }
 }

@@ -1,10 +1,11 @@
 package station;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import line.Line;
 import metro.Metro;
@@ -45,8 +46,8 @@ public class Station {
         return line;
     }
 
-    public List<Ticket> listTickets() {
-        return ticketOffice.listTickets();
+    public Map<LocalDate, Long> getRevenue() {
+        return ticketOffice.getRevenue();
     }
 
     public void setStationChangeList(Station stations) {
@@ -77,8 +78,8 @@ public class Station {
         return changeList;
     }
 
-    public void saleTicket(Date date, String firstStation, String lastStation) {
-        ticketOffice.saleTicket(date, firstStation, lastStation);
+    public void saleTicket(LocalDate date, String firstStation, String lastStation, int stages) {
+        ticketOffice.saleTicket(date, firstStation, lastStation, stages);
     }
 
     @Override

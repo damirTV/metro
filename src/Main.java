@@ -1,9 +1,9 @@
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import line.Color;
 import metro.Metro;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -30,9 +30,13 @@ public class Main {
         System.out.println(metro);
         System.out.println(metro.getNumberStagesBetweenStationsDifferentLines(metro.getStationByName("Пермь 2"),
                 metro.getStationByName("Пацанская")));
-        metro.saleTicket(new Date(), metro.getStationByName("Спортивная"),
-                metro.getStationByName("Спортивная"),
-                metro.getStationByName("Дворец Культуры"));
-        metro.getListTickets(metro.getStationByName("Спортивная"));
+
+        metro.saleTicket(LocalDate.of(2024, 1, 24),
+                metro.getStationByName("Пермь 2"),
+                metro.getStationByName("Спортивная"));
+        metro.saleTicket(LocalDate.of(2024, 1, 24),
+                metro.getStationByName("Пермь 2"),
+                metro.getStationByName("Пацанская"));
+        metro.getRevenueByStation(metro.getStationByName("Пермь 2"));
     }
 }
