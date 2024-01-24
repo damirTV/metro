@@ -7,8 +7,6 @@ import line.Color;
 import line.Line;
 import station.Station;
 
-
-@SuppressWarnings("checkstyle:Indentation")
 public class Metro {
     private final String city;
     private Set<Line> lines = new HashSet<>();
@@ -33,10 +31,6 @@ public class Metro {
             throw new RuntimeException(Errors.LINE_NOT_HAVE_STATION.getText());
         }
         return findLineByColor(color).getLastStation();
-    }
-
-    public Set<Line> getLines() {
-        return lines;
     }
 
     public int getNumberStagesBetweenStationsDifferentLines(Station firstStation, Station lastStation) {
@@ -103,7 +97,7 @@ public class Metro {
         System.out.println(saleStation.getRevenue());
    }
 
-   private void setStationChangeList(Station lastStation, List<String> changeStations) {
+    private void setStationChangeList(Station lastStation, List<String> changeStations) {
         for (String station : changeStations) {
             Station changeStation = getStationByName(station);
             changeStation.setStationChangeList(lastStation);

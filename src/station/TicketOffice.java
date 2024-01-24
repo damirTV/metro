@@ -8,7 +8,7 @@ public class TicketOffice {
     private Map<LocalDate, Long> revenue = new HashMap<>();
 
     public void saleTicket(LocalDate date, String firstStation, String lastStation, int stages) {
-        Long ticketPrice = (long) (stages * 5L + 20);
+        Long ticketPrice = stages * 5L + 20;
         if (revenue.containsKey(date)) {
             ticketPrice = revenue.get(date) + ticketPrice;
         }
