@@ -6,13 +6,13 @@ import java.util.List;
 
 
 public class TicketOffice {
-    private List<Ticket> ticketList;
+    private List<Ticket> ticketList = new ArrayList<>();
 
-    public TicketOffice() {
-        this.ticketList = new ArrayList<>();
+    public void saleTicket(Date date, String firstStation, String lastStation) {
+        ticketList.add(new Ticket(10, date, firstStation, lastStation));
     }
 
-    public void saleTicket(Date date, Station firstStation, Station lastStation) {
-
+    public List<Ticket> listTickets() {
+        return ticketList;
     }
 }

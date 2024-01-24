@@ -1,12 +1,13 @@
 package station;
 
-import line.Line;
-import metro.Metro;
-
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.StringJoiner;
+import java.util.Set;
+import line.Line;
+import metro.Metro;
 
 public class Station {
     private String name;
@@ -14,23 +15,21 @@ public class Station {
     private Station nextStation;
     private Duration timeToNextStation;
     private Line line;
-    private List<Station> stationChangeList;
+    private Set<Station> stationChangeList = new HashSet<>();
     private Metro metro;
-    private TicketOffice ticketOffice;
+    private TicketOffice ticketOffice = new TicketOffice();
 
     public Station(String name, Metro metro, Line line) {
         this.name = name;
         this.metro = metro;
         this.line = line;
-        stationChangeList = new ArrayList<>();
-        this.ticketOffice = new TicketOffice();
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Station> getStationChangeList() {
+    public Set<Station> getStationChangeList() {
         return stationChangeList;
     }
 
@@ -44,6 +43,10 @@ public class Station {
 
     public Line getLine() {
         return line;
+    }
+
+    public List<Ticket> listTickets() {
+        return ticketOffice.listTickets();
     }
 
     public void setStationChangeList(Station stations) {
@@ -62,8 +65,7 @@ public class Station {
         this.timeToNextStation = timeToNextStation;
     }
 
-    @Override
-    public String toString() {
+    private List<String> convertNullToString() {
         List<String> changeList = new ArrayList<>();
         if (stationChangeList.isEmpty()) {
             changeList.add("null");
@@ -72,8 +74,16 @@ public class Station {
                 changeList.add(station.getLine().getColor().getName());
             }
         }
-        return new StringJoiner(",", Station.class.getSimpleName() + "{", "}")
-                .add("name='" + name + "'")
-                .add("changeLines=" + changeList).toString();
+        return changeList;
+    }
+
+    public void saleTicket(Date date, String firstStation, String lastStation) {
+        ticketOffice.saleTicket(date, firstStation, lastStation);
+    }
+
+    @Override
+    public String toString() {
+        List<String> changeList = convertNullToString();
+        return "Station{name='" + name + "', changeLines=" + changeList + "}";
     }
 }

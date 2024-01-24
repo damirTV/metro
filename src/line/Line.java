@@ -1,15 +1,14 @@
 package line;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import metro.Metro;
 import station.Station;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
-
 public class Line {
     private final Color color;
-    private List<Station> stationList = new ArrayList<>();
+    private Set<Station> stationList = new LinkedHashSet<>();
     private final Metro metro;
 
     public Line(Color color, Metro metro) {
@@ -21,18 +20,34 @@ public class Line {
         return color;
     }
 
-    public List<Station> getStationList() {
+    public Set<Station> getStationList() {
         return stationList;
     }
 
-    public void addStation(String name, Metro metro, Line line) {
-        stationList.add(new Station(name, metro, line));
+    public Station getLastStation() {
+        Station lastStation = null;
+        for (Station station : stationList) {
+            lastStation = station;
+        }
+        return lastStation;
+    }
+
+    public Set<Station> getChangeStations() {
+        Set<Station> changeStationsList = new HashSet<>();
+        for (Station station : stationList) {
+            if (!station.getStationChangeList().isEmpty()) {
+                changeStationsList.add(station);
+            }
+        }
+        return changeStationsList;
+    }
+
+    public void addStation(String name) {
+        stationList.add(new Station(name, this.metro, this));
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(",", Line.class.getSimpleName() + "[", "]")
-                .add("color='" + color + "'")
-                .add("stations='" + stationList + "'").toString();
+        return "Line{color='" + color.getName() + "', stations=" + stationList + "}";
     }
 }
