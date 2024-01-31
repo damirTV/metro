@@ -1,4 +1,4 @@
-package metro;
+package errors;
 
 public enum Errors {
     STATION_BY_NAME_NOT_FOUND("Станция не найдена по имени"),
@@ -10,10 +10,7 @@ public enum Errors {
     NAME_STATION_ALREADY_EXISTS("Такая станция уже существует"),
     LINE_HAVE_STATION("У этой линии уже есть станции"),
     COLOR_LINE_ALREADY_EXISTS("Линия уже существует"),
-    NOT_FOUND_CHANGE_STATION("Не найдено станции для пересадки"),
-    E11("Нет пути из станции"), // TODO - переделать ошибку, чтобы отображала станции
-    E12("Ошибка 12: "),
-    E13("Ошибка 13: ");
+    NOT_FOUND_CHANGE_STATION("Не найдено станции для пересадки");
 
     private final String text;
 

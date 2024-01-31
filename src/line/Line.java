@@ -3,6 +3,8 @@ package line;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import errors.Errors;
 import metro.Metro;
 import station.Station;
 
@@ -40,6 +42,12 @@ public class Line {
             }
         }
         return changeStationsList;
+    }
+
+    public void checkStationList() {
+        if (!this.stationList.isEmpty()) {
+            throw new RuntimeException(Errors.LINE_HAVE_STATION.getText());
+        }
     }
 
     public void addStation(String name) {

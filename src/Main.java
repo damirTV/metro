@@ -2,11 +2,12 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import errors.MetroException;
 import line.Color;
 import metro.Metro;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MetroException {
         Metro metro = new Metro("Пермь");
 
         metro.createNewLine(Color.RED, metro);
@@ -37,6 +38,9 @@ public class Main {
         metro.saleTicket(LocalDate.of(2024, 1, 24),
                 metro.getStationByName("Пермь 2"),
                 metro.getStationByName("Пацанская"));
+        metro.getRevenueByStation(metro.getStationByName("Пермь 2"));
+        metro.salePassMonth(LocalDate.of(2024, 1, 24),
+                metro.getStationByName("Пермь 2"));
         metro.getRevenueByStation(metro.getStationByName("Пермь 2"));
     }
 }

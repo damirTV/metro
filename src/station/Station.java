@@ -2,9 +2,7 @@ package station;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import line.Line;
@@ -47,7 +45,7 @@ public class Station {
     }
 
     public Map<LocalDate, Long> getRevenue() {
-        return ticketOffice.getRevenue();
+        return ticketOffice.getRevenueTotal();
     }
 
     public void setStationChangeList(Station stations) {
@@ -66,25 +64,27 @@ public class Station {
         this.timeToNextStation = timeToNextStation;
     }
 
-    private List<String> convertNullToString() {
-        List<String> changeList = new ArrayList<>();
+    private String getChangeLines() {
         if (stationChangeList.isEmpty()) {
-            changeList.add("null");
-        } else {
-            for (Station station : stationChangeList) {
-                changeList.add(station.getLine().getColor().getName());
-            }
+            return null;
         }
-        return changeList;
+        StringBuilder stationChangesList = new StringBuilder();
+        for (Station station : stationChangeList) {
+            stationChangesList.append(station.getLine().getColor().getName());
+        }
+        return stationChangesList.toString();
     }
 
     public void saleTicket(LocalDate date, int stages) {
         ticketOffice.saleTicket(date, stages);
     }
 
+    public void salePassMonth(LocalDate date) {
+        ticketOffice.salePassMonth(date);
+    }
+
     @Override
     public String toString() {
-        List<String> changeList = convertNullToString();
-        return "Station{name='" + name + "', changeLines=" + changeList + "}";
+        return "Station{name='" + name + "', changeLines=" + getChangeLines() + "}";
     }
 }
