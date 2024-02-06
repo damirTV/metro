@@ -9,11 +9,11 @@ import java.util.*;
 public class TicketOffice {
     private final BigDecimal PRICE_ONE_STAGE = new BigDecimal("5");
     private final BigDecimal PRICE_ONE_TICKET = new BigDecimal("20");
-    private Map<LocalDate, Long> revenue = new HashMap<>();
-    private final Long passMonthPrice = 3000L;
+    private Map<LocalDate, BigDecimal> revenue = new HashMap<>();
+    private final BigDecimal passMonthPrice = new BigDecimal("3000");
 
     public void saleTicket(LocalDate date, int stages) {
-        BigDecimal ticketPrice = stages * PRICE_ONE_STAGE + PRICE_ONE_TICKET;
+        BigDecimal ticketPrice = PRICE_ONE_STAGE.multiply(new BigDecimal(stages)).add(PRICE_ONE_TICKET);
         addRevenue(date, ticketPrice);
     }
 
@@ -30,14 +30,14 @@ public class TicketOffice {
         addRevenue(date, passMonthPrice);
     }
 
-    private void addRevenue(LocalDate date, Long revenueAdd) {
+    private void addRevenue(LocalDate date, BigDecimal revenueAdd) {
         if (revenue.containsKey(date)) {
-            revenueAdd = revenue.get(date) + revenueAdd;
+            revenueAdd = revenueAdd.add(revenue.get(date));
         }
         revenue.put(date, revenueAdd);
     }
 
-    public Map<LocalDate, Long> getRevenue() {
+    public Map<LocalDate, BigDecimal> getRevenue() {
         return revenue;
     }
 }

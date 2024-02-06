@@ -2,6 +2,8 @@ package metro;
 
 import errors.Errors;
 import errors.MetroException;
+
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
@@ -100,14 +102,14 @@ public class Metro {
         List<Station> stations = lines.stream() // Формируем список станций
                 .flatMap(value -> value.getStations().stream()).toList();
 
-        TreeMap<LocalDate, Long> revenueByDate = stations.stream()
+        TreeMap<LocalDate, BigDecimal> revenueByDate = stations.stream()
                 .flatMap(value -> value
                         .getRevenue()
                         .entrySet()
                         .stream())
                 .collect(Collectors.groupingBy(Map.Entry::getKey,
                         TreeMap::new,
-                        Collectors.summingLong(Map.Entry::getValue)
+                        Collectors.reducing(BigDecimal.ZERO, Map.Entry::getValue, BigDecimal::add)
         ));
         System.out.println(revenueByDate);
     }

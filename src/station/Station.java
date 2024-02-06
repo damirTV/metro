@@ -1,5 +1,6 @@
 package station;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public class Station {
         return line;
     }
 
-    public Map<LocalDate, Long> getRevenue() {
+    public Map<LocalDate, BigDecimal> getRevenue() {
         return ticketOffice.getRevenue();
     }
 
