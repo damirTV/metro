@@ -5,6 +5,7 @@ import errors.MetroException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import line.Color;
 import line.Line;
 import station.Station;
@@ -12,20 +13,18 @@ import station.Station;
 public class Metro {
     private final String city;
     private Set<Line> lines = new HashSet<>();
+    private List<PassMonth> passMonths = new LinkedList<>();
 
     public Metro(String city) {
         this.city = city;
     }
 
-    public Station getStationByName(String name) { // TODO - переделать в private
-        for (Line line : lines) { // TODO - убрать вложенность
-            for (Station station : line.getStationList()) {
-                if (Objects.equals(name, station.getName())) {
-                    return station;
-                }
-            }
-        }
-        throw new RuntimeException(Errors.STATION_BY_NAME_NOT_FOUND.getText());
+    public Station getStationByName(String name) { // модификатор public для тестирования
+        return lines.stream()
+                .flatMap(line -> line.getStations().stream())
+                .filter(station -> station.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(Errors.STATION_BY_NAME_NOT_FOUND.getText()));
     }
 
     private Station getLastStation(Color color) {
@@ -37,7 +36,6 @@ public class Metro {
 
     public int getNumberStagesBetweenStationsDifferentLines(Station firstStation, Station lastStation)
             throws MetroException {
-
         if (firstStation.getLine() == lastStation.getLine()) {
             return getNumberStagesBetweenStationsSameLines(firstStation, lastStation);
         }
@@ -60,10 +58,10 @@ public class Metro {
             throws MetroException {
         if (getNumberStagesBetweenNextStations(firstStation, lastStation) != -1) {
             return getNumberStagesBetweenNextStations(firstStation, lastStation);
-            }
+        }
         if (getNumberStagesBetweenPrevStations(firstStation, lastStation) != -1) {
             return getNumberStagesBetweenPrevStations(firstStation, lastStation);
-            }
+        }
         throw new MetroException("Нет пути из станции "
                 + firstStation.getName() + " в " + lastStation.getName());
     }
@@ -98,45 +96,52 @@ public class Metro {
         return countStage;
     }
 
-    public void getRevenueByStation(Station saleStation) {
-        System.out.println(saleStation.getRevenue());
-   }
+    public void getRevenueByDate() {
+        List<Station> stations = lines.stream() // Формируем список станций
+                .flatMap(value -> value.getStations().stream()).toList();
+
+        TreeMap<LocalDate, Long> revenueByDate = stations.stream()
+                .flatMap(value -> value
+                        .getRevenue()
+                        .entrySet()
+                        .stream())
+                .collect(Collectors.groupingBy(Map.Entry::getKey,
+                        TreeMap::new,
+                        Collectors.summingLong(Map.Entry::getValue)
+        ));
+        System.out.println(revenueByDate);
+    }
 
     private void setStationChangeList(Station lastStation, List<String> changeStationNames) {
-        for (String station : changeStationNames) {
-            Station changeStation = getStationByName(station);
-            changeStation.setStationChangeList(lastStation);
-            lastStation.setStationChangeList(changeStation);
-        }
+        changeStationNames.stream().map(this::getStationByName)
+               .forEach(station -> {
+                   station.setStationChangeList(lastStation);
+                   lastStation.setStationChangeList(station);
+               });
     }
 
     public Station findChangeStation(Line lineFrom, Line lineTo) {
-        Set<Station> lineFromChangeStations = lineFrom.getChangeStations();
-        for (Station stationLineFrom : lineFromChangeStations) {
-            if (stationLineFrom.getStationChangeList().contains(findStationByLine(stationLineFrom
-                    .getStationChangeList(), lineTo))) {
-                return stationLineFrom;
-            }
-        }
-        throw new RuntimeException(Errors.NOT_FOUND_CHANGE_STATION.getText());
+        return lineFrom.getChangeStations().stream()
+                .filter(stationLineFrom -> stationLineFrom
+                        .getStationChangeList()
+                        .contains(findStationByLine(stationLineFrom
+                                .getStationChangeList(), lineTo)))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND_CHANGE_STATION.getText()));
     }
 
     private Station findStationByLine(Set<Station> stationChangeSet, Line line) {
-        for (Station station : stationChangeSet) {
-            if (station.getLine() == line) {
-                return station;
-            }
-        }
-        throw new RuntimeException(Errors.NOT_FOUND_CHANGE_STATION.getText());
+        return stationChangeSet.stream()
+                .filter(value -> value.getLine() == line)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(Errors.NOT_FOUND_CHANGE_STATION.getText()));
     }
 
     private Line findLineByColor(Color color) {
-        for (Line line : lines) {
-            if (line.getColor() == color) {
-                return line;
-            }
-        }
-        throw new RuntimeException(Errors.LINE_NOT_FOUND.getText());
+        return lines.stream()
+                .filter(value -> value.getColor() == color)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(Errors.LINE_NOT_FOUND.getText()));
     }
 
     public void saleTicket(LocalDate date, Station firstStation, Station lastStation) throws MetroException {
@@ -144,8 +149,29 @@ public class Metro {
                 getNumberStagesBetweenStationsDifferentLines(firstStation, lastStation));
     }
 
-    public void salePassMonth(LocalDate date, Station station) {
-        station.salePassMonth(date);
+    public void salePassMonth(LocalDate date, String stationName) {
+        String serias = "а"; // Серия проездного билета
+        PassMonth passMonth = new PassMonth(serias, date, date.plusMonths(1));
+        passMonth.setNumber(serias + counterToNumber(passMonth.getCounter()));
+        passMonths.add(passMonth);
+        getStationByName(stationName).salePassMonth(date);
+    }
+
+    public String counterToNumber(int passCounter) {
+        if (passCounter < 10) {
+            return "000" + passCounter;
+        }
+        if (passCounter < 100) {
+            return "00" + passCounter;
+        }
+        if (passCounter < 1000) {
+            return "0" + passCounter;
+        }
+        return Integer.toString(passCounter);
+    }
+
+    public void renewPassMonth(String nameStation, String number, LocalDate date) {
+        getStationByName(nameStation).renewPassMonth(passMonths, number, date);
     }
 
     public void createNewLine(Color color, Metro metro) {
@@ -153,36 +179,36 @@ public class Metro {
         lines.add(new Line(color, metro));
     }
 
-    public void createFirstStation(Color color, String nameStation, Metro metro) {
-        checksForFirstStation(color, nameStation);
+    public void createFirstStation(Color color, String nameStation) {
+        checkForFirstStation(color, nameStation);
         findLineByColor(color).addStation(nameStation);
     }
 
-    public void createFirstStation(Color color, String nameStation, Metro metro,
+    public void createFirstStation(Color color, String nameStation,
                                    List<String> changeStations) {
-        checksForFirstStation(color, nameStation);
+        checkForFirstStation(color, nameStation);
         findLineByColor(color).addStation(nameStation);
         setStationChangeList(getLastStation(color), changeStations);
 
     }
 
-    public void createLastStation(Color color, String nameStation, Metro metro,
+    public void createLastStation(Color color, String nameStation,
                                   Duration duration) {
-        commonCreateLastStation(duration, color, nameStation, metro,
+        commonCreateLastStation(duration, color, nameStation,
                 findLineByColor(color), getLastStation(color));
     }
 
-    public void createLastStation(Color color, String nameStation, Metro metro,
+    public void createLastStation(Color color, String nameStation,
                                   Duration duration, List<String> changeStations) {
-        checksForLastStation(color, nameStation, getLastStation(color), duration);
-        commonCreateLastStation(duration, color, nameStation, metro,
+        checkForLastStation(color, nameStation, getLastStation(color), duration);
+        commonCreateLastStation(duration, color, nameStation,
                 findLineByColor(color), getLastStation(color));
         setStationChangeList(getLastStation(color), changeStations);
     }
 
     private void commonCreateLastStation(Duration duration, Color color, String nameStation,
-                                         Metro metro, Line line, Station prevStation) {
-        checksForLastStation(color, nameStation, prevStation, duration);
+                                         Line line, Station prevStation) {
+        checkForLastStation(color, nameStation, prevStation, duration);
         prevStation.setTimeToNextStation(duration);
         findLineByColor(color).addStation(nameStation);
         Station lastStation = getLastStation(color);
@@ -190,14 +216,23 @@ public class Metro {
         lastStation.setPrevStation(prevStation);
     }
 
-    private void checksForFirstStation(Color color, String nameStation) {
+    public boolean checkPassMonthExpires(String number, LocalDate date) {
+        Optional<PassMonth> passMonth = Optional.ofNullable(passMonths.stream()
+                .filter(value -> number.equals(value.getNumber()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(Errors.PASS_MONTH_NOT_EXISTS.getText())));
+        return passMonth.stream()
+                .anyMatch(value -> date.isAfter(value.getExpireDate())); // false - билет действителен
+    }
+
+    private void checkForFirstStation(Color color, String nameStation) {
         checkLineColor(color);
         checkNameStation(nameStation);
         checkLineExists(color);
     }
 
-    private void checksForLastStation(Color color, String nameStation,
-                                      Station prevStation, Duration duration) {
+    private void checkForLastStation(Color color, String nameStation,
+                                     Station prevStation, Duration duration) {
         checkLineColor(color);
         checkNameStation(nameStation);
         checkStationHaveNextStation(prevStation);
@@ -218,31 +253,29 @@ public class Metro {
 
 
     private void checkLineColor(Color color) { // Выходит ошибка, если линия не найдена
-        for (Line line : lines) {
-            if (line.getColor() == color) {
-                return;
-            }
-        }
-        throw new RuntimeException(Errors.LINE_NOT_FOUND.getText());
+        lines.stream()
+                .filter(value -> value.getColor() == color)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(Errors.LINE_NOT_FOUND.getText()));
     }
 
     private void checkLineHaveColor(Color color) { // Выходит ошибка, если линия найдена
-        for (Line line : lines) {
-            if (line.getColor() == color) {
-                throw new RuntimeException(Errors.COLOR_LINE_ALREADY_EXISTS.getText());
-            }
-        }
+        lines.stream()
+                .filter(value -> value.getColor() == color)
+                .findFirst()
+                .ifPresent(value -> {
+                    throw new RuntimeException(Errors.COLOR_LINE_ALREADY_EXISTS.getText());
+                });
     }
 
-
     private void checkNameStation(String name) {
-        for (Line line : lines) { // TODO - убрать вложенность
-            for (Station station : line.getStationList()) {
-                if (Objects.equals(name, station.getName())) {
+        lines.stream()
+                .flatMap(line -> line.getStations().stream()
+                        .filter(station -> station.getName().equals(name)))
+                .findAny()
+                .ifPresent((station -> {
                     throw new RuntimeException(Errors.NAME_STATION_ALREADY_EXISTS.getText());
-                }
-            }
-        }
+                }));
     }
 
     private void checkLineExists(Color color) {

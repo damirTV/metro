@@ -3,10 +3,12 @@ package station;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import line.Line;
 import metro.Metro;
+import metro.PassMonth;
 
 public class Station {
     private String name;
@@ -45,7 +47,7 @@ public class Station {
     }
 
     public Map<LocalDate, Long> getRevenue() {
-        return ticketOffice.getRevenueTotal();
+        return ticketOffice.getRevenue();
     }
 
     public void setStationChangeList(Station stations) {
@@ -68,11 +70,10 @@ public class Station {
         if (stationChangeList.isEmpty()) {
             return null;
         }
-        StringBuilder stationChangesList = new StringBuilder();
-        for (Station station : stationChangeList) {
-            stationChangesList.append(station.getLine().getColor().getName());
-        }
-        return stationChangesList.toString();
+        return (stationChangeList.stream()
+                .map(value -> value.getLine().getColor().getName())
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append))
+                .toString();
     }
 
     public void saleTicket(LocalDate date, int stages) {
@@ -81,6 +82,10 @@ public class Station {
 
     public void salePassMonth(LocalDate date) {
         ticketOffice.salePassMonth(date);
+    }
+
+    public void renewPassMonth(List<PassMonth> passMonth, String number, LocalDate date) {
+        ticketOffice.renewPassMonth(passMonth, number, date);
     }
 
     @Override
