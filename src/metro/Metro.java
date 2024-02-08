@@ -159,6 +159,9 @@ public class Metro {
     }
 
     public String counterToNumber(int passCounter) {
+        if (passCounter < 0) {
+            throw new RuntimeException(Errors.NOT_CORRECT_NUMBER.getText());
+        }
         if (passCounter < 10) {
             return "000" + passCounter;
         }
