@@ -168,7 +168,10 @@ public class Metro {
         if (passCounter < 1000) {
             return "0" + passCounter;
         }
-        return Integer.toString(passCounter);
+        if (passCounter < 10000) {
+            return Integer.toString(passCounter);
+        }
+        throw new RuntimeException(Errors.NOT_CORRECT_NUMBER.getText());
     }
 
     public void renewPassMonth(String nameStation, String number, LocalDate date) {

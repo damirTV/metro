@@ -11,7 +11,8 @@ public enum Errors {
     LINE_HAVE_STATION("У этой линии уже есть станции"),
     COLOR_LINE_ALREADY_EXISTS("Линия уже существует"),
     NOT_FOUND_CHANGE_STATION("Не найдено станции для пересадки"),
-    PASS_MONTH_NOT_EXISTS("Месячного абонемента с таким номером не найдено");
+    PASS_MONTH_NOT_EXISTS("Месячного абонемента с таким номером не найдено"),
+    NOT_CORRECT_NUMBER("Некорректный номер месячного абонемента");
 
     private final String text;
 
